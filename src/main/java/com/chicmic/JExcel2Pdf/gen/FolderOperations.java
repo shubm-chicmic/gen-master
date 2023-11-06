@@ -16,7 +16,7 @@ public class FolderOperations {
                 System.out.println("Folder created: " + folder.getAbsolutePath());
                 return folder.getAbsolutePath();
             } else {
-                System.err.println("Failed to create folder: " + folder.getAbsolutePath());
+                System.err.println(getClass().getName() + " : Failed to create folder: " + folder.getAbsolutePath());
             }
         } else {
             System.out.println("Folder already exists: " + folder.getAbsolutePath());

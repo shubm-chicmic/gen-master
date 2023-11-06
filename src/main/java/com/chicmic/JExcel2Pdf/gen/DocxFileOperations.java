@@ -11,30 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DocxFileOperations {
-    String updatedDocumentName = "L1 Request letter for Submission of Export doc.docx";
+    String updatedDocumentName = GenApplication.documentName;
 
-    public  void updateTextAtPosition(String inputFilePath, String outputFilePath, int paragraphIndex, int runIndex, String newText) throws IOException {
-        outputFilePath += "/" + updatedDocumentName;
-        FileInputStream fileInputStream = new FileInputStream(inputFilePath);
-        XWPFDocument document = new XWPFDocument(fileInputStream);
 
-        // Check if the specified paragraph and run indices are within valid ranges
-        if (paragraphIndex >= 0 && paragraphIndex < document.getParagraphs().size()) {
-            XWPFParagraph paragraph = document.getParagraphs().get(paragraphIndex);
-            if (runIndex >= 0 && runIndex < paragraph.getRuns().size()) {
-                XWPFRun run = paragraph.getRuns().get(runIndex);
-                run.setText(newText, 0); // Replace the existing text with the new text
-            }
-        }
-
-        FileOutputStream fileOutputStream = new FileOutputStream(outputFilePath);
-        document.write(fileOutputStream);
-        fileOutputStream.close();
-    }
     public void updateTextAtPosition(String inputFilePath, String outputFilePath, HashMap<Pair<Integer, Integer>, Pair<String, String>> textParaRunIndexMap) throws IOException {
         outputFilePath += "/" + updatedDocumentName;
         inputFilePath += "/" + updatedDocumentName;
-        System.out.println("\u001B[33m document path = " + inputFilePath + "\u001B[0m");
+//        System.out.println("\u001B[33m document path = " + inputFilePath + "\u001B[0m");
         FileInputStream fileInputStream = new FileInputStream(inputFilePath);
         XWPFDocument document = new XWPFDocument(fileInputStream);
 
@@ -55,7 +38,7 @@ public class DocxFileOperations {
                     }
                 }
             } else if(docType.equals("table")){
-                System.out.println("\u001B[31m New Text " + newText + " " + paragraphIndex + " " + runIndex);
+//                System.out.println("\u001B[31m New Text " + newText + " " + paragraphIndex + " " + runIndex);
                 // Handle table cell updates
                 updateTableText(document, paragraphIndex, runIndex, newText);
             }

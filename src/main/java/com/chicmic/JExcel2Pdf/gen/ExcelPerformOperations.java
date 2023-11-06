@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.chicmic.JExcel2Pdf.gen.DateConverter.findGreatestDate;
 import static com.chicmic.JExcel2Pdf.gen.DateConverter.getTodaysDate;
 import static com.chicmic.JExcel2Pdf.gen.FolderOperations.pathBefore;
 
@@ -53,7 +54,6 @@ public class ExcelPerformOperations {
         DocxFileOperations docxFileOperations = new DocxFileOperations();
 
         String excelFilePath = rootDirectoryPath;
-        System.out.println("\u0001B35m excelFilePath = " + excelFilePath);
         String resultantFilePath = folderOperations.createFolder("Annexure 1", excelFilePath);
         if (resultantFilePath == null) {
             System.out.println("Returning");
@@ -72,16 +72,18 @@ public class ExcelPerformOperations {
             rows.add(row);
         }
 
-        System.err.println("File Path exper = " + excelFile.getAbsolutePath());
-        // use this to find the document paragraph index and run index by entering path of doc file
-        docxFileOperations.getParagraphAndRunIndices(excelFilePath);
+        // use this to find the document paragraph index and run index and table row and col index by entering path of doc file
+        //docxFileOperations.getParagraphAndRunIndices(excelFilePath);
 
         String prevD = "";
         String prevF = "";
-        String prevB = "";
+        String prevB = ""; // for invoice
+        String invoiceDate = "";
         int heirarchyIndex = 0;
         String currentWorkingDirectory = resultantFilePath;
         for (int i = 0; i < rows.size(); i++) {
+            invoiceDate = findGreatestDate(prevB, invoiceDate);
+
             Row sortedRow = rows.get(i);
             Cell currentCellA = sortedRow.getCell(0);
             Cell currentCellB = sortedRow.getCell(1);
@@ -91,25 +93,15 @@ public class ExcelPerformOperations {
             String currentD = currentCellD.toString();
             String currentF = currentCellF.toString();
             String currentB = currentCellB.toString();
-            String invoiceDate = currentB;
+//            System.out.println("\u001B[35m date greatest of index = " + i + " : prevB = " + prevB + " currentB = " + currentB + " invoidce : " + invoiceDate +"\u001B[0m");
+
+
             double cellValBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 3).toString());
             double cellValChargesAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 4).toString());
             double cellValFinalBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 5).toString());
-            cellValBillAmount = Math.round(cellValBillAmount * 100.0) / 100.0;
-            cellValChargesAmount = Math.round(cellValChargesAmount * 100.0) / 100.0;
-            cellValFinalBillAmount = Math.round(cellValFinalBillAmount * 100.0) / 100.0;
-
-//            DecimalFormat decimalFormat = new DecimalFormat("#.##");
-//
-//            // Round off the double values to two decimal places
-//            cellValBillAmount = Double.parseDouble(decimalFormat.format(cellValBillAmount));
-//            cellValChargesAmount = Double.parseDouble(decimalFormat.format(cellValChargesAmount));
-//            cellValFinalBillAmount = Double.parseDouble(decimalFormat.format(cellValFinalBillAmount));
 
             if (currentCellD != null) {
-                                System.out.println("\u001B[33m val = prevD " + prevD + " currentD= " + currentD + " Ano. : " + currentCellA.toString() +  "\u001B[0m");
                 if (prevD.equals(currentD)) {
-                    System.out.println("index = " + i);
                     if (currentF.equals(prevF)) {
 
                         billAmount += cellValBillAmount;
@@ -117,13 +109,6 @@ public class ExcelPerformOperations {
                         finalBillAmount += cellValFinalBillAmount;
                     } else {
 
-//                        System.out.println("\u001B[34m size= " + textParaRunIndexHashMap.size());
-//                        for (Map.Entry<Pair<Integer, Integer>, Pair<String, String>> entry : textParaRunIndexHashMap.entrySet()) {
-//                            Pair<Integer, Integer> key = entry.getKey();
-//                            String value = String.valueOf(entry.getValue());
-//                            System.out.println("Key: " + key + ", Value: " + value);
-//                        }
-                        System.out.println("i = amount = " + i + " " + billAmount + " " + chargesAmount + " "  + finalBillAmount);
                         billAmount = Math.round(billAmount * 100.0) / 100.0;
                         chargesAmount = Math.round(chargesAmount * 100.0) / 100.0;
                         finalBillAmount = Math.round(finalBillAmount * 100.0) / 100.0;
@@ -131,19 +116,15 @@ public class ExcelPerformOperations {
                         textParaRunIndexHashMap.put(billAmountPair, new Pair<>(String.valueOf(billAmount), "text"));
                         textParaRunIndexHashMap.put(chargesAmountPair, new Pair<>(String.valueOf(chargesAmount), "text"));
                         textParaRunIndexHashMap.put(finalBillAmountPair, new Pair<>(String.valueOf(finalBillAmount), "text"));
-                        textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(prevB, "table"));
+                        textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(invoiceDate, "table"));
                         textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
                         textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(currentD, "table"));
-
-
-
-                        System.out.println("\u001B[0m inside else excelfilePath == " + excelFilePath);
                         docxFileOperations.updateTextAtPosition(excelFilePath, currentWorkingDirectory, textParaRunIndexHashMap);
                         heirarchyIndex++;
+                        invoiceDate = "";
                         currentWorkingDirectory = folderOperations.createFolder(String.valueOf(heirarchyIndex), pathBefore(currentWorkingDirectory)); // create folder with name = '1'
                     }
                 } else {
-                    System.out.println("index = " + i);
                     billAmount = Math.round(billAmount * 100.0) / 100.0;
                     chargesAmount = Math.round(chargesAmount * 100.0) / 100.0;
                     finalBillAmount = Math.round(finalBillAmount * 100.0) / 100.0;
@@ -151,23 +132,21 @@ public class ExcelPerformOperations {
                     textParaRunIndexHashMap.put(billAmountPair, new Pair<>(String.valueOf(billAmount), "text"));
                     textParaRunIndexHashMap.put(chargesAmountPair, new Pair<>(String.valueOf(chargesAmount), "text"));
                     textParaRunIndexHashMap.put(finalBillAmountPair, new Pair<>(String.valueOf(finalBillAmount), "text"));
-                    textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(prevB, "table"));
+                    textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(invoiceDate, "table"));
                     textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
                     textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(prevD, "table"));
-                    System.out.println("i = amount = " + i + " " + billAmount + " " + chargesAmount + " "  + finalBillAmount);
 
                     docxFileOperations.updateTextAtPosition(excelFilePath, currentWorkingDirectory, textParaRunIndexHashMap);
 
                     String path = folderOperations.createFolder(currentD, resultantFilePath);
                     heirarchyIndex = 1;
                     currentWorkingDirectory = folderOperations.createFolder(String.valueOf(heirarchyIndex), path); // create folder with name = '1'
-
-
+                    invoiceDate = "";
                     billAmount = cellValBillAmount;
                     chargesAmount = cellValChargesAmount;
                     finalBillAmount = cellValFinalBillAmount;
                 }
-                File invoiceFile = folderOperations.searchForFile(rootDirectoryPath, currentCellC.toString() + ".pdf");
+                File invoiceFile = folderOperations.searchForFile(GenApplication.invoiceDirectoriesPath, currentCellC.toString() + ".pdf");
                 folderOperations.saveFileToOutputPath(invoiceFile, currentWorkingDirectory);
 
                 prevD = currentD;
@@ -177,7 +156,7 @@ public class ExcelPerformOperations {
 
         }
 
-        System.out.println("Excel sheet sorted, column G updated, and new file generated based on column D.");
+        System.out.println("\u001B[35m" + getClass().getName() + " : Operation Completed without exception !\u001B[0m" );
     }
 }
 
