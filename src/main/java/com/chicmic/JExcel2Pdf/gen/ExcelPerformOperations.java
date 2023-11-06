@@ -123,6 +123,11 @@ public class ExcelPerformOperations {
 //                            String value = String.valueOf(entry.getValue());
 //                            System.out.println("Key: " + key + ", Value: " + value);
 //                        }
+                        System.out.println("i = amount = " + i + " " + billAmount + " " + chargesAmount + " "  + finalBillAmount);
+                        billAmount = Math.round(billAmount * 100.0) / 100.0;
+                        chargesAmount = Math.round(chargesAmount * 100.0) / 100.0;
+                        finalBillAmount = Math.round(finalBillAmount * 100.0) / 100.0;
+
                         textParaRunIndexHashMap.put(billAmountPair, new Pair<>(String.valueOf(billAmount), "text"));
                         textParaRunIndexHashMap.put(chargesAmountPair, new Pair<>(String.valueOf(chargesAmount), "text"));
                         textParaRunIndexHashMap.put(finalBillAmountPair, new Pair<>(String.valueOf(finalBillAmount), "text"));
@@ -139,12 +144,17 @@ public class ExcelPerformOperations {
                     }
                 } else {
                     System.out.println("index = " + i);
+                    billAmount = Math.round(billAmount * 100.0) / 100.0;
+                    chargesAmount = Math.round(chargesAmount * 100.0) / 100.0;
+                    finalBillAmount = Math.round(finalBillAmount * 100.0) / 100.0;
+
                     textParaRunIndexHashMap.put(billAmountPair, new Pair<>(String.valueOf(billAmount), "text"));
                     textParaRunIndexHashMap.put(chargesAmountPair, new Pair<>(String.valueOf(chargesAmount), "text"));
                     textParaRunIndexHashMap.put(finalBillAmountPair, new Pair<>(String.valueOf(finalBillAmount), "text"));
                     textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(prevB, "table"));
                     textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
                     textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(prevD, "table"));
+                    System.out.println("i = amount = " + i + " " + billAmount + " " + chargesAmount + " "  + finalBillAmount);
 
                     docxFileOperations.updateTextAtPosition(excelFilePath, currentWorkingDirectory, textParaRunIndexHashMap);
 
