@@ -78,56 +78,56 @@ public class ExcelPerformOperations {
 
         String prevD = "";
         String prevF = "";
+        String prevB = "";
         int heirarchyIndex = 0;
         String currentWorkingDirectory = resultantFilePath;
         for (int i = 0; i < rows.size(); i++) {
-            System.out.println("\u001B[37m Currenting working directory " + currentWorkingDirectory + "\u001B[0m");
             Row sortedRow = rows.get(i);
             Cell currentCellA = sortedRow.getCell(0);
             Cell currentCellB = sortedRow.getCell(1);
             Cell currentCellC = sortedRow.getCell(2);
             Cell currentCellD = sortedRow.getCell(indexOfRecipientColumnD);
             Cell currentCellF = sortedRow.getCell(indexOfRecipientColumnD + 2);
-            System.out.println("cell value = "+ currentCellA + " " + currentCellB + " " + currentCellC + " " + currentCellD);
+            String currentD = currentCellD.toString();
+            String currentF = currentCellF.toString();
+            String currentB = currentCellB.toString();
+            String invoiceDate = currentB;
+            double cellValBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 3).toString());
+            double cellValChargesAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 4).toString());
+            double cellValFinalBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 5).toString());
+            cellValBillAmount = Math.round(cellValBillAmount * 100.0) / 100.0;
+            cellValChargesAmount = Math.round(cellValChargesAmount * 100.0) / 100.0;
+            cellValFinalBillAmount = Math.round(cellValFinalBillAmount * 100.0) / 100.0;
+
+//            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+//
+//            // Round off the double values to two decimal places
+//            cellValBillAmount = Double.parseDouble(decimalFormat.format(cellValBillAmount));
+//            cellValChargesAmount = Double.parseDouble(decimalFormat.format(cellValChargesAmount));
+//            cellValFinalBillAmount = Double.parseDouble(decimalFormat.format(cellValFinalBillAmount));
 
             if (currentCellD != null) {
-                String currentD = currentCellD.toString();
-                String currentF = currentCellF.toString();
-                String currentB = currentCellB.toString();
-                String invoiceDate = currentB;
-                double cellValBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 3).toString());
-                double cellValChargesAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 4).toString());
-                double cellValFinalBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 5).toString());
-
-                DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
-                // Round off the double values to two decimal places
-                cellValBillAmount = Double.parseDouble(decimalFormat.format(cellValBillAmount));
-                cellValChargesAmount = Double.parseDouble(decimalFormat.format(cellValChargesAmount));
-                cellValFinalBillAmount = Double.parseDouble(decimalFormat.format(cellValFinalBillAmount));
-                System.out.println("\u001B[33m val = prevD " + prevD + " currentD= " + currentD + " Ano. : " + currentCellA.toString() +  "\u001B[0m");
+                                System.out.println("\u001B[33m val = prevD " + prevD + " currentD= " + currentD + " Ano. : " + currentCellA.toString() +  "\u001B[0m");
                 if (prevD.equals(currentD)) {
                     System.out.println("index = " + i);
                     if (currentF.equals(prevF)) {
-//                            System.out.println("\u001B[34m in prevF if "  + currentF + "\u001B[0m");
 
                         billAmount += cellValBillAmount;
                         chargesAmount += cellValChargesAmount;
                         finalBillAmount += cellValFinalBillAmount;
                     } else {
 
-//                        textParaRunIndexHashMap.put(invoiceDate, new Pair<>(10, 3));
-                        System.out.println("\u001B[34m size= " + textParaRunIndexHashMap.size());
-                        for (Map.Entry<Pair<Integer, Integer>, Pair<String, String>> entry : textParaRunIndexHashMap.entrySet()) {
-                            Pair<Integer, Integer> key = entry.getKey();
-                            String value = String.valueOf(entry.getValue());
-                            System.out.println("Key: " + key + ", Value: " + value);
-                        }
+//                        System.out.println("\u001B[34m size= " + textParaRunIndexHashMap.size());
+//                        for (Map.Entry<Pair<Integer, Integer>, Pair<String, String>> entry : textParaRunIndexHashMap.entrySet()) {
+//                            Pair<Integer, Integer> key = entry.getKey();
+//                            String value = String.valueOf(entry.getValue());
+//                            System.out.println("Key: " + key + ", Value: " + value);
+//                        }
                         textParaRunIndexHashMap.put(billAmountPair, new Pair<>(String.valueOf(billAmount), "text"));
                         textParaRunIndexHashMap.put(chargesAmountPair, new Pair<>(String.valueOf(chargesAmount), "text"));
                         textParaRunIndexHashMap.put(finalBillAmountPair, new Pair<>(String.valueOf(finalBillAmount), "text"));
-                        textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(invoiceDate, "table"));
-                        textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(currentF, "table"));
+                        textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(prevB, "table"));
+                        textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
                         textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(currentD, "table"));
 
 
@@ -137,19 +137,17 @@ public class ExcelPerformOperations {
                         heirarchyIndex++;
                         currentWorkingDirectory = folderOperations.createFolder(String.valueOf(heirarchyIndex), pathBefore(currentWorkingDirectory)); // create folder with name = '1'
                     }
-//                        System.out.println("currentD = " + currentD+  " currentF = " + currentF.toString());
                 } else {
                     System.out.println("index = " + i);
                     textParaRunIndexHashMap.put(billAmountPair, new Pair<>(String.valueOf(billAmount), "text"));
                     textParaRunIndexHashMap.put(chargesAmountPair, new Pair<>(String.valueOf(chargesAmount), "text"));
                     textParaRunIndexHashMap.put(finalBillAmountPair, new Pair<>(String.valueOf(finalBillAmount), "text"));
-                    textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(invoiceDate, "table"));
-                    textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(currentF, "table"));
-                    textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(currentD, "table"));
+                    textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(prevB, "table"));
+                    textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
+                    textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(prevD, "table"));
 
                     docxFileOperations.updateTextAtPosition(excelFilePath, currentWorkingDirectory, textParaRunIndexHashMap);
 
-//                        System.out.println("Else currentD = " + currentD+  " currentF = " + currentF.toString());
                     String path = folderOperations.createFolder(currentD, resultantFilePath);
                     heirarchyIndex = 1;
                     currentWorkingDirectory = folderOperations.createFolder(String.valueOf(heirarchyIndex), path); // create folder with name = '1'
@@ -164,6 +162,7 @@ public class ExcelPerformOperations {
 
                 prevD = currentD;
                 prevF = currentF;
+                prevB = currentB;
             }
 
         }

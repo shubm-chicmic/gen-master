@@ -28,7 +28,7 @@ public class DateConverter {
             return ordinalDay + " " + monthYear;
         } catch (ParseException e) {
             e.printStackTrace();
-            return inputDate; // Return the original date in case of an error
+            return inputDate;
         }
     }
 

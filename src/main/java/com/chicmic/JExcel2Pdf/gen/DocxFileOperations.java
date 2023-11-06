@@ -49,7 +49,7 @@ public class DocxFileOperations {
 
                 if (runIndex >= 0 && runIndex < paragraph.getRuns().size()) {
                     XWPFRun run = paragraph.getRuns().get(runIndex);
-                    run.setText(newText, 0); // Replace the existing text with the new text
+                    run.setText(newText, 0);
                     if((paragraphIndex == 1 && runIndex == 2) || (paragraphIndex == 31 && runIndex == 1)){
                         clearRunsInRange(document, paragraphIndex, runIndex + 1);
                     }
@@ -93,11 +93,9 @@ public class DocxFileOperations {
             XWPFParagraph paragraph = document.getParagraphs().get(paragraphIndex);
             int totalRuns = paragraph.getRuns().size();
 
-            // Ensure the startRunIndex and endRunIndex are within the valid range
             startRunIndex = Math.max(0, startRunIndex);
 
 
-            // Clear the specified range of runs
             for (int i = startRunIndex; i < totalRuns; i++) {
                 XWPFRun run = paragraph.getRuns().get(i);
                 run.setText("", 0); // Clear the text of the run
@@ -105,34 +103,7 @@ public class DocxFileOperations {
         }
     }
 
-    public  void updateTextInRange(String inputFilePath, String outputFilePath, int paragraphIndex, int runStartIndex, int runEndIndex, String newText) throws IOException {
-        outputFilePath += "/" + updatedDocumentName;
 
-        FileInputStream fileInputStream = new FileInputStream(inputFilePath);
-        XWPFDocument document = new XWPFDocument(fileInputStream);
-
-        // Check if the specified paragraph index is within a valid range
-        if (paragraphIndex >= 0 && paragraphIndex < document.getParagraphs().size()) {
-            XWPFParagraph paragraph = document.getParagraphs().get(paragraphIndex);
-
-            // Ensure the run indices are within the valid range
-            int maxRunIndex = paragraph.getRuns().size() - 1;
-            if (runStartIndex >= 0 && runStartIndex <= maxRunIndex && runEndIndex >= runStartIndex && runEndIndex <= maxRunIndex) {
-                // Create a new run with the updated text
-                XWPFRun updatedRun = paragraph.insertNewRun(runStartIndex);
-                updatedRun.setText(newText);
-
-                // Remove the runs in the specified range
-                for (int i = runStartIndex + 1; i <= runEndIndex; i++) {
-                    paragraph.removeRun(runStartIndex + 1);
-                }
-            }
-        }
-
-        FileOutputStream fileOutputStream = new FileOutputStream(outputFilePath);
-        document.write(fileOutputStream);
-        fileOutputStream.close();
-    }
     public void getParagraphAndRunIndices(String inputFilePath) throws IOException {
         inputFilePath += "/" + updatedDocumentName;
         FileInputStream fileInputStream = new FileInputStream(inputFilePath);
@@ -167,21 +138,5 @@ public class DocxFileOperations {
             paragraphIndex++;
         }
     }
-    public  void getParagraphAndRunIndices1(String inputFilePath) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(inputFilePath);
-        XWPFDocument document = new XWPFDocument(fileInputStream);
 
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
-        for (int paragraphIndex = 0; paragraphIndex < paragraphs.size(); paragraphIndex++) {
-            XWPFParagraph paragraph = paragraphs.get(paragraphIndex);
-            System.out.println("\u001B[34m Paragraph Index: " + paragraphIndex + "\u001B[0m");
-
-            List<XWPFRun> runs = paragraph.getRuns();
-            for (int runIndex = 0; runIndex < runs.size(); runIndex++) {
-                XWPFRun run = runs.get(runIndex);
-                System.out.println("\u001B[35m"+ "Run Index: " + runIndex);
-                System.out.println("Run Text: " + run.getText(0) + "\u001B[0m"); // Print the text of the run
-            }
-        }
-    }
 }

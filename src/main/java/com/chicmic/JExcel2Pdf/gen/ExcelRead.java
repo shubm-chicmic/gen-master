@@ -15,12 +15,10 @@ public class ExcelRead {
     public static void excelReadAndSort(File excelFile){
         try {
 
-            // Load the Excel file
             FileInputStream fis = new FileInputStream(excelFile);
             Workbook workbook = new XSSFWorkbook(fis);
             fis.close();
 
-            // Get the first sheet
             Sheet sheet = workbook.getSheetAt(0);
 
             // Read and store data from columns D and M
@@ -48,18 +46,7 @@ public class ExcelRead {
             for (RowData rowData : rowDataList) {
                 System.out.println("D: " + rowData.columnD + ", F: " + rowData.columnF);
             }
-            // Find and store IDs from column M into an array
-//            List<String> ids = new ArrayList<>();
-//            for (RowData rowData : rowDataList) {
-//                if (rowData.columnM.matches(".*\\d+.*")) {
-//                    ids.add(rowData.columnM);
-//                }
-//            }
 
-            // Print the sorted data and the IDs
-
-
-//            System.out.println("IDs from column M: " + ids);
         } catch (IOException e) {
             e.printStackTrace();
         }
