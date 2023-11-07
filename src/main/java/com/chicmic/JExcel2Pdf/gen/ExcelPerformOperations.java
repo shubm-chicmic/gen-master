@@ -48,8 +48,6 @@ public class ExcelPerformOperations {
         textParaRunIndexHashMap.put(currentDatePair, new Pair<>(currentDate, "text"));
         textParaRunIndexHashMap.put(new Pair<>(31, 1), new Pair<>(currentDate, "text"));
 
-        System.out.println("hashmap = " + textParaRunIndexHashMap.size());
-
         FolderOperations folderOperations = new FolderOperations();
         DocxFileOperations docxFileOperations = new DocxFileOperations();
 
@@ -99,15 +97,19 @@ public class ExcelPerformOperations {
             double cellValBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 3).toString());
             double cellValChargesAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 4).toString());
             double cellValFinalBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 5).toString());
+//            System.out.println("\u001B[33m amount g" + i + " : cellValBillAmount = " + cellValBillAmount + " cellValChargesAmount = " + cellValChargesAmount + " cellValFinalBillAmount : " + cellValFinalBillAmount +"\u001B[0m");
 
             if (currentCellD != null) {
                 if (prevD.equals(currentD)) {
                     if (currentF.equals(prevF)) {
-
+                        cellValBillAmount = Math.round(cellValBillAmount * 100.0) / 100.0;
+                        cellValChargesAmount = Math.round(cellValChargesAmount * 100.0) / 100.0;
+                        cellValFinalBillAmount = Math.round(cellValFinalBillAmount * 100.0) / 100.0;
                         billAmount += cellValBillAmount;
                         chargesAmount += cellValChargesAmount;
                         finalBillAmount += cellValFinalBillAmount;
                     } else {
+
 
                         billAmount = Math.round(billAmount * 100.0) / 100.0;
                         chargesAmount = Math.round(chargesAmount * 100.0) / 100.0;
@@ -119,10 +121,16 @@ public class ExcelPerformOperations {
                         textParaRunIndexHashMap.put(invoiceDatePair, new Pair<>(invoiceDate, "table"));
                         textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
                         textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(currentD, "table"));
+
+                        // Document updates
                         docxFileOperations.updateTextAtPosition(excelFilePath, currentWorkingDirectory, textParaRunIndexHashMap);
+
                         heirarchyIndex++;
                         invoiceDate = "";
                         currentWorkingDirectory = folderOperations.createFolder(String.valueOf(heirarchyIndex), pathBefore(currentWorkingDirectory)); // create folder with name = '1'
+                        billAmount = cellValBillAmount;
+                        chargesAmount = cellValChargesAmount;
+                        finalBillAmount = cellValFinalBillAmount;
                     }
                 } else {
                     billAmount = Math.round(billAmount * 100.0) / 100.0;
@@ -136,6 +144,7 @@ public class ExcelPerformOperations {
                     textParaRunIndexHashMap.put(softexNumberPair, new Pair<>(prevF, "table"));
                     textParaRunIndexHashMap.put(nameOfBuyerPair, new Pair<>(prevD, "table"));
 
+                    // Document updates
                     docxFileOperations.updateTextAtPosition(excelFilePath, currentWorkingDirectory, textParaRunIndexHashMap);
 
                     String path = folderOperations.createFolder(currentD, resultantFilePath);
@@ -146,6 +155,7 @@ public class ExcelPerformOperations {
                     chargesAmount = cellValChargesAmount;
                     finalBillAmount = cellValFinalBillAmount;
                 }
+                // Invoice pdf search and save in current working directory
                 File invoiceFile = folderOperations.searchForFile(GenApplication.invoiceDirectoriesPath, currentCellC.toString() + ".pdf");
                 folderOperations.saveFileToOutputPath(invoiceFile, currentWorkingDirectory);
 
