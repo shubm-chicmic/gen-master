@@ -12,7 +12,7 @@ public class GenApplication {
 
 	private static final String FILE_NAME = "For Bank (August).xlsx";
 	private static final String rootDirectory = System.getProperty("user.dir");
-	public static final String invoiceDirectoriesPath = rootDirectory;
+	public static final String invoiceDirectoriesPath = rootDirectory + "/invoices";
 	public static final String documentName = "L1 Request letter for Submission of Export doc.docx";
 
 	public static void main(String[] args) {
