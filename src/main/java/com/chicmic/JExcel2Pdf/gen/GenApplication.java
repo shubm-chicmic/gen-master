@@ -10,19 +10,24 @@ import java.util.Properties;
 
 public class GenApplication {
 
-	private static final String FILE_NAME = "For Bank (August).xlsx";
-	private static final String rootDirectory = System.getProperty("user.dir");
+	public static final boolean autoDeleteFolder = true;
+	private static final String FILE_NAME = "For Bank (September).xlsx";
+	public static final String rootDirectory = System.getProperty("user.dir");
 	public static final String invoiceDirectoriesPath = rootDirectory + "/invoices";
 	public static final String documentName = "L1 Request letter for Submission of Export doc.docx";
-
+    public static final String fourPointDeclarationDocumentName = "FOUR POINT DECLARATION July 23.docx";
+	public static final String fourPointDeclarationDocumentPath = rootDirectory + "/" + fourPointDeclarationDocumentName;
 	public static void main(String[] args) {
 		try {
 			File excelFile = new File(rootDirectory + "/" +FILE_NAME); // Excel File Read in current Directory
 			ExcelSorter excelSorter = new ExcelSorter();
 			File sortedExcelFile = excelSorter.excelManager(excelFile); // Excel File Sort acc to column D then F
 
-			ExcelPerformOperations excelPerformOperations = new ExcelPerformOperations();
-			excelPerformOperations.excelPerformOperations(sortedExcelFile, rootDirectory);
+//			ExcelPerformOperations excelPerformOperations = new ExcelPerformOperations();
+//			excelPerformOperations.excelPerformOperations(sortedExcelFile);
+
+			FourPointDeclaration fourPointDeclaration = new FourPointDeclaration();
+			fourPointDeclaration.generateDocument(excelFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

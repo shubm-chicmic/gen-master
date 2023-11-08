@@ -20,19 +20,61 @@ public class ExcelSorter {
         try {
             FileInputStream fis = new FileInputStream(file);
             Workbook workbook = new XSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheetAt(0); // Assuming it's the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
 
-            // Extract rows to a list
+            // Extract rows to a list, but skip null rows and empty cells
             List<Row> rows = new ArrayList<>();
             for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
-                rows.add(row);
-            }
+                if (row != null) {
+                    boolean hasCellValue = false;  // Flag to check if any cell has a value
+                    for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
+                        Cell cell = row.getCell(cellIndex);
+                        if (cell != null) {
+                            if (cell.getCellType() == CellType.STRING) {
+                                String cellValue = cell.getStringCellValue();
+                                if (cellValue != null && !cellValue.isEmpty()) {
+                                    hasCellValue = true;
+                                    break;
+                                }
+                            } else if (cell.getCellType() != CellType.BLANK) {
+                                hasCellValue = true;
+                                break;
+                            }
+                        }
+                    }
 
+                    if (hasCellValue) {
+                        rows.add(row);
+                    } else {
+                        System.out.println("Empty row at index: " + rowIndex);
+                    }
+                } else {
+                    System.out.println("Null row at index: " + rowIndex);
+                }
+            }
             Comparator<Row> comparator = (r1, r2) -> {
-                Cell cell1 = r1.getCell(columnIndex);
-                Cell cell2 = r2.getCell(columnIndex);
-                return cell1.toString().compareTo(cell2.toString());
+                if (r1 == null && r2 == null) {
+                    return 0;
+                } else if (r1 == null) {
+                    return 1;
+                } else if (r2 == null) {
+                    return -1;
+                } else {
+                    Cell cell1 = r1.getCell(columnIndex);
+                    Cell cell2 = r2.getCell(columnIndex);
+                    if (cell1 == null) {
+                        System.out.println("Cell at row " + r1.getRowNum() + " and column " + columnIndex + " is null");
+                    }
+                    if (cell2 == null) {
+                        System.out.println("Cell at row " + r2.getRowNum() + " and column " + columnIndex + " is null");
+                    }
+                    if (cell1 != null && cell2 != null) {
+                        return cell1.toString().compareTo(cell2.toString());
+                    } else {
+                        return 0; // Handle null cells as equal
+                    }
+                }
             };
             rows.sort(comparator);
 
@@ -61,7 +103,8 @@ public class ExcelSorter {
 
             int rowIndex = 0;
             for (Row sortedRow : rows) {
-                Row newRow = newSheet.createRow(rowIndex++);
+                Row newRow = newSheet.createRow(rowIndex);
+                rowIndex++;
 
                 for (int j = 0; j < sortedRow.getLastCellNum(); j++) {
                     Cell cell = newRow.createCell(j);

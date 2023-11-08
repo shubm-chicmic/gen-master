@@ -10,20 +10,49 @@ public class FolderOperations {
     public String createFolder(String folderName, String path) {
         File folder = new File(path, folderName);
 
-        if (!folder.exists()) {
-            boolean created = folder.mkdirs();
-            if (created) {
-                System.out.println("Folder created: " + folder.getAbsolutePath());
-                return folder.getAbsolutePath();
-            } else {
-                System.err.println(getClass().getName() + " : Failed to create folder: " + folder.getAbsolutePath());
+        if (folder.exists()) {
+            if(GenApplication.autoDeleteFolder) {
+                // Delete the folder if it already exists
+                boolean deleted = deleteFolder(folder);
+                if (!deleted) {
+                    System.err.println(getClass().getName() + " : Failed to delete existing folder: " + folder.getAbsolutePath());
+                    return null;
+                } else {
+                    System.out.println("\u001B[31m Folder Deleted: " + folder.getAbsolutePath() + "\u001B[0m");
+                }
+            }else {
+                System.err.println(getClass().getName() + " : Folder already exists: " + folder.getAbsolutePath());
+                return null;
             }
-        } else {
-            System.out.println("Folder already exists: " + folder.getAbsolutePath());
         }
 
-        return null; // Return null in case of failure
+        boolean created = folder.mkdirs();
+        if (created) {
+            System.out.println("Folder created: " + folder.getAbsolutePath());
+            return folder.getAbsolutePath();
+        } else {
+            System.err.println(getClass().getName() + " : Failed to create folder: " + folder.getAbsolutePath());
+            return null; // Return null in case of failure
+        }
+    }
 
+    private boolean deleteFolder(File folder) {
+        if (folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        deleteFolder(file);
+                    } else {
+                        boolean deleted = file.delete();
+                        if (!deleted) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return folder.delete();
     }
     public static String pathBefore(String path) {
         File file = new File(path);
