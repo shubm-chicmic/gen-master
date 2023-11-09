@@ -28,7 +28,7 @@ public class ExcelSorter {
                 Row row = sheet.getRow(rowIndex);
                 if (row != null) {
                     boolean hasCellValue = false;  // Flag to check if any cell has a value
-                    for (int cellIndex = 0; cellIndex < row.getLastCellNum(); cellIndex++) {
+                    for (int cellIndex = 0; cellIndex < 9; cellIndex++) {
                         Cell cell = row.getCell(cellIndex);
                         if (cell != null) {
                             if (cell.getCellType() == CellType.STRING) {
@@ -51,6 +51,7 @@ public class ExcelSorter {
                     }
                 } else {
                     System.out.println("Null row at index: " + rowIndex);
+                    break;
                 }
             }
             Comparator<Row> comparator = (r1, r2) -> {

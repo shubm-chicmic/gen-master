@@ -2,21 +2,17 @@ package com.chicmic.JExcel2Pdf.gen;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-
-
 
 public class GenApplication {
 
 	public static final boolean autoDeleteFolder = true;
-	private static final String FILE_NAME = "For Bank (September).xlsx";
+	public static final String FILE_NAME = "For Bank (September).xlsx";
 	public static final String rootDirectory = System.getProperty("user.dir");
 	public static final String invoiceDirectoriesPath = rootDirectory + "/invoices";
 	public static final String documentName = "L1 Request letter for Submission of Export doc.docx";
-    public static final String fourPointDeclarationDocumentName = "FOUR POINT DECLARATION July 23.docx";
+    public static final String fourPointDeclarationDocumentName = "FOUR POINT DECLARATION.docx";
 	public static final String fourPointDeclarationDocumentPath = rootDirectory + "/" + fourPointDeclarationDocumentName;
+	public static final String FINWNumber = "003FINW232480063"; // Inward remittance Reference Number
 	public static void main(String[] args) {
 		try {
 			File excelFile = new File(rootDirectory + "/" +FILE_NAME); // Excel File Read in current Directory

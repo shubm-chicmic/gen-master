@@ -17,9 +17,12 @@ import java.util.List;
 public class FourPointDeclaration {
 
     Pair<Integer, Integer> minDateAndMaxDateIndex = new Pair<>(3, 3);
-    Pair<Integer, Integer> billAmountIndex1 = new Pair<>(3, 7);
+    Pair<Integer, Integer> billAmountIndex1 = new Pair<>(3, 6);
     Pair<Integer, Integer> billAmountIndex2 = new Pair<>(5, 3);
+    Pair<Integer, Integer> FINWNumberIndex = new Pair<>(5, 6);
     Pair<Integer, Integer> finalBillAmountIndex = new Pair<>(7, 1);
+    Pair<Integer, Integer> tableIndex = new Pair<>(1, 0);
+
     HashMap<Pair<Integer, Integer>, Pair<String, String>> documentIndexAndTextMap = new HashMap<>();
     private final DocxFileOperations docxFileOperations = new DocxFileOperations();
     private final FolderOperations folderOperations = new FolderOperations();
@@ -27,7 +30,7 @@ public class FourPointDeclaration {
 
     public void generateDocument(File excelFile) throws IOException {
 
-//        docxFileOperations.getParagraphAndRunIndices(templateDocument);
+        docxFileOperations.getParagraphAndRunIndices(templateDocument);
 
         FileInputStream fis = new FileInputStream(excelFile);
         Workbook workbook = new XSSFWorkbook(fis);
@@ -81,16 +84,15 @@ public class FourPointDeclaration {
         System.out.println("\u001B[0m");
         documentIndexAndTextMap.put(billAmountIndex1, new Pair<>(String.valueOf(billAmountTotal), "text"));
         documentIndexAndTextMap.put(billAmountIndex2, new Pair<>(String.valueOf(billAmountTotal), "text"));
+        documentIndexAndTextMap.put(FINWNumberIndex, new Pair<>("", "text"));
         documentIndexAndTextMap.put(finalBillAmountIndex, new Pair<>("USD " + String.valueOf(finalBillAmountTotal), "text"));
         documentIndexAndTextMap.put(minDateAndMaxDateIndex, new Pair<>(minDate + " till " + maxDate, "text"));
+        documentIndexAndTextMap.put(tableIndex, new Pair<>("", "table_add"));
+
         finalDocumentPath = folderOperations.createFolder("FourPointDeclaration", GenApplication.rootDirectory);
         finalDocumentPath += "/FourPointDeclaration.docx";
         docxFileOperations.updateTextAtPosition(templateDocument, finalDocumentPath, documentIndexAndTextMap);
-
-
-        docxFileOperations.getParagraphAndRunIndices(finalDocumentPath);
-        docxFileOperations.deleteTables(finalDocumentPath);
-        docxFileOperations.insertTableAtIndex(finalDocumentPath, finalDocumentPath + "tablemodified.docx", excelFile, 0);
+//        docxFileOperations.addTableAfterParagraphIndex(finalDocumentPath, finalDocumentPath + "modifiled.docx", 3,excelFile);
 
     }
 }

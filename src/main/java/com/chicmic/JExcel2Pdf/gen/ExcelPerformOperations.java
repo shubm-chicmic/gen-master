@@ -43,6 +43,7 @@ public class ExcelPerformOperations {
     Pair<Integer, Integer> invoiceDateIndex = new Pair<>(4, 1); // inside table its row and col index
     Pair<Integer, Integer> softexNumberIndex = new Pair<>(3, 1); // inside table its row and col index
     Pair<Integer, Integer> nameOfBuyerIndex = new Pair<>(2, 1); // inside table its row and col index
+    Pair<Integer, Integer> FINWNumberIndex = new Pair<>(5, 6);
 
     FolderOperations folderOperations = new FolderOperations();
     DocxFileOperations docxFileOperations = new DocxFileOperations();
@@ -61,6 +62,7 @@ public class ExcelPerformOperations {
         textParaRunIndexHashMap.put(billAmountIndex, new Pair<>(String.valueOf(billAmount), "text"));
         textParaRunIndexHashMap.put(chargesAmountIndex, new Pair<>(String.valueOf(chargesAmount), "text"));
         textParaRunIndexHashMap.put(finalBillAmountIndex, new Pair<>(String.valueOf(finalBillAmount), "text"));
+        textParaRunIndexHashMap.put(FINWNumberIndex, new Pair<>(GenApplication.FINWNumber, "table"));
         textParaRunIndexHashMap.put(invoiceDateIndex, new Pair<>(invoiceDate, "table"));
         textParaRunIndexHashMap.put(softexNumberIndex, new Pair<>(prevF, "table"));
         textParaRunIndexHashMap.put(nameOfBuyerIndex, new Pair<>(prevD, "table"));
