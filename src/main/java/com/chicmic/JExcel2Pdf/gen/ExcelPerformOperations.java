@@ -12,10 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,9 +23,8 @@ import static com.chicmic.JExcel2Pdf.gen.FolderOperations.pathBefore;
 public class ExcelPerformOperations {
     String templateDocumentName = "/" + GenApplication.documentName;
     Integer indexOfRecipientColumnD = 3;
-    Integer indexOfSOFTEXNumberColumnF = 5;
     // HashMap of updating text , pair < paraindex , runIndex> for updating document with specific text at location paragaraph index and run index
-    private HashMap<Pair<Integer, Integer>, Pair<String, String>> textParaRunIndexHashMap = new HashMap<>();
+    private final HashMap<Pair<Integer, Integer>, Pair<String, String>> textParaRunIndexHashMap = new HashMap<>();
 
     double billAmount = 0.0; // Initialize the billAmount column g
     double chargesAmount = 0.0; // Initialize the charges column h
@@ -43,7 +39,7 @@ public class ExcelPerformOperations {
     Pair<Integer, Integer> invoiceDateIndex = new Pair<>(4, 1); // inside table its row and col index
     Pair<Integer, Integer> softexNumberIndex = new Pair<>(3, 1); // inside table its row and col index
     Pair<Integer, Integer> nameOfBuyerIndex = new Pair<>(2, 1); // inside table its row and col index
-    Pair<Integer, Integer> FINWNumberIndex = new Pair<>(5, 6);
+    Pair<Integer, Integer> FINWNumberIndex = new Pair<>(0, 1);
 
     FolderOperations folderOperations = new FolderOperations();
     DocxFileOperations docxFileOperations = new DocxFileOperations();
@@ -62,10 +58,10 @@ public class ExcelPerformOperations {
         textParaRunIndexHashMap.put(billAmountIndex, new Pair<>(String.valueOf(billAmount), "text"));
         textParaRunIndexHashMap.put(chargesAmountIndex, new Pair<>(String.valueOf(chargesAmount), "text"));
         textParaRunIndexHashMap.put(finalBillAmountIndex, new Pair<>(String.valueOf(finalBillAmount), "text"));
-        textParaRunIndexHashMap.put(FINWNumberIndex, new Pair<>(GenApplication.FINWNumber, "table"));
-        textParaRunIndexHashMap.put(invoiceDateIndex, new Pair<>(invoiceDate, "table"));
-        textParaRunIndexHashMap.put(softexNumberIndex, new Pair<>(prevF, "table"));
-        textParaRunIndexHashMap.put(nameOfBuyerIndex, new Pair<>(prevD, "table"));
+        textParaRunIndexHashMap.put(FINWNumberIndex, new Pair<>(GenApplication.FINWNumber, "table1"));
+        textParaRunIndexHashMap.put(invoiceDateIndex, new Pair<>(invoiceDate, "table1"));
+        textParaRunIndexHashMap.put(softexNumberIndex, new Pair<>(prevF, "table1"));
+        textParaRunIndexHashMap.put(nameOfBuyerIndex, new Pair<>(prevD, "table1"));
         docxFileOperations.updateTextAtPosition(excelFilePath + templateDocumentName , currentWorkingDirectory + templateDocumentName, textParaRunIndexHashMap);
     }
 
@@ -90,26 +86,25 @@ public class ExcelPerformOperations {
         }
 
         // use this to find the document paragraph index and run index and table row and col index by entering path of doc file
-        //docxFileOperations.getParagraphAndRunIndices(excelFilePath);
+//        docxFileOperations.getParagraphAndRunIndices(excelFilePath + templateDocumentName);
 
         int heirarchyIndex = 0;
         currentWorkingDirectory = resultantFilePath;
-        for (int i = 0; i < rows.size(); i++) {
+        for (Row row : rows) {
             invoiceDate = findMaximumDate(prevB, invoiceDate);
 
-            Row sortedRow = rows.get(i);
-            Cell currentCellA = sortedRow.getCell(0);
-            Cell currentCellB = sortedRow.getCell(1);
-            Cell currentCellC = sortedRow.getCell(2);
-            Cell currentCellD = sortedRow.getCell(indexOfRecipientColumnD);
-            Cell currentCellF = sortedRow.getCell(indexOfRecipientColumnD + 2);
+            Cell currentCellA = row.getCell(0);
+            Cell currentCellB = row.getCell(1);
+            Cell currentCellC = row.getCell(2);
+            Cell currentCellD = row.getCell(indexOfRecipientColumnD);
+            Cell currentCellF = row.getCell(indexOfRecipientColumnD + 2);
             String currentD = currentCellD.toString();
             String currentF = currentCellF.toString();
             String currentB = currentCellB.toString();
 
-            double cellValBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 3).toString());
-            double cellValChargesAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 4).toString());
-            double cellValFinalBillAmount = Double.parseDouble(sortedRow.getCell(indexOfRecipientColumnD + 5).toString());
+            double cellValBillAmount = Double.parseDouble(row.getCell(indexOfRecipientColumnD + 3).toString());
+            double cellValChargesAmount = Double.parseDouble(row.getCell(indexOfRecipientColumnD + 4).toString());
+            double cellValFinalBillAmount = Double.parseDouble(row.getCell(indexOfRecipientColumnD + 5).toString());
 //            System.out.println("\u001B[33m amount g" + i + " : cellValBillAmount = " + cellValBillAmount + " cellValChargesAmount = " + cellValChargesAmount + " cellValFinalBillAmount : " + cellValFinalBillAmount +"\u001B[0m");
 
             if (currentCellD != null) {

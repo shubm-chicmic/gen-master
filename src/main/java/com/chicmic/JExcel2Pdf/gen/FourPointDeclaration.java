@@ -21,7 +21,7 @@ public class FourPointDeclaration {
     Pair<Integer, Integer> billAmountIndex2 = new Pair<>(5, 3);
     Pair<Integer, Integer> FINWNumberIndex = new Pair<>(5, 6);
     Pair<Integer, Integer> finalBillAmountIndex = new Pair<>(7, 1);
-    Pair<Integer, Integer> tableIndex = new Pair<>(1, 0);
+    Pair<Integer, Integer> tableIndex = new Pair<>(6, 0);
 
     HashMap<Pair<Integer, Integer>, Pair<String, String>> documentIndexAndTextMap = new HashMap<>();
     private final DocxFileOperations docxFileOperations = new DocxFileOperations();
@@ -30,7 +30,7 @@ public class FourPointDeclaration {
 
     public void generateDocument(File excelFile) throws IOException {
 
-        docxFileOperations.getParagraphAndRunIndices(templateDocument);
+//        docxFileOperations.getParagraphAndRunIndices(templateDocument);
 
         FileInputStream fis = new FileInputStream(excelFile);
         Workbook workbook = new XSSFWorkbook(fis);
@@ -47,19 +47,15 @@ public class FourPointDeclaration {
         String maxDate = "";
         double billAmountTotal = 0.0;
         double finalBillAmountTotal = 0.0;
-        String finalDocumentPath = "";
-        for (int i = 0; i < rows.size(); i++) {
-            Row excelRows = rows.get(i);
+        String finalDocumentPath;
+        for (Row excelRows : rows) {
             if (excelRows != null) {
-//                System.out.println("\u001B[31m index = " + i + "\u001B[0m");
                 Cell cellB = excelRows.getCell(1); // Cell For Date
                 Cell cellG = excelRows.getCell(6); // Cell For BillAmount
                 Cell cellI = excelRows.getCell(8); // Cell For FinalBillAmount
                 if (cellB == null || cellG == null || cellI == null) {
                     continue;
                 }
-//            System.out.println("\u001B[33m" + cellB + " | " + cellG + " | " + cellI + "\u001B[0m");
-
                 minDate = DateOperations.findMinimumDate(cellB.toString(), minDate);
                 maxDate = DateOperations.findMaximumDate(cellB.toString(), maxDate);
                 double cellBillAmount = Double.parseDouble(cellG.toString());
@@ -76,23 +72,17 @@ public class FourPointDeclaration {
 
         billAmountTotal = Math.round(billAmountTotal * 100.0) / 100.0;
         finalBillAmountTotal = Math.round(finalBillAmountTotal * 100.0) / 100.0;
-        System.out.println("\u001B[32m Date = ");
-        System.out.println(minDate + " | " + maxDate);
-        System.out.println("Sum of Amount = ");
 
-        System.out.println(billAmountTotal + " | " + finalBillAmountTotal);
-        System.out.println("\u001B[0m");
         documentIndexAndTextMap.put(billAmountIndex1, new Pair<>(String.valueOf(billAmountTotal), "text"));
         documentIndexAndTextMap.put(billAmountIndex2, new Pair<>(String.valueOf(billAmountTotal), "text"));
         documentIndexAndTextMap.put(FINWNumberIndex, new Pair<>("", "text"));
-        documentIndexAndTextMap.put(finalBillAmountIndex, new Pair<>("USD " + String.valueOf(finalBillAmountTotal), "text"));
+        documentIndexAndTextMap.put(finalBillAmountIndex, new Pair<>("USD " + (finalBillAmountTotal), "text"));
         documentIndexAndTextMap.put(minDateAndMaxDateIndex, new Pair<>(minDate + " till " + maxDate, "text"));
         documentIndexAndTextMap.put(tableIndex, new Pair<>("", "table_add"));
 
         finalDocumentPath = folderOperations.createFolder("FourPointDeclaration", GenApplication.rootDirectory);
         finalDocumentPath += "/FourPointDeclaration.docx";
         docxFileOperations.updateTextAtPosition(templateDocument, finalDocumentPath, documentIndexAndTextMap);
-//        docxFileOperations.addTableAfterParagraphIndex(finalDocumentPath, finalDocumentPath + "modifiled.docx", 3,excelFile);
-
+        docxFileOperations.deleteTableAtIndex(finalDocumentPath, finalDocumentPath, 1);
     }
 }

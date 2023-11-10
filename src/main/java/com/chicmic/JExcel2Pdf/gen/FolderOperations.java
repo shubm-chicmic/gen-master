@@ -36,7 +36,7 @@ public class FolderOperations {
         }
     }
 
-    private boolean deleteFolder(File folder) {
+    public boolean deleteFolder(File folder) {
         if (folder.isDirectory()) {
             File[] files = folder.listFiles();
             if (files != null) {
@@ -77,11 +77,11 @@ public class FolderOperations {
                 if (file.isDirectory()) {
                     File found = searchForFile(file, targetFileName);
                     if (found != null) {
-                        return found; // Return the found file if it's in a subdirectory
+                        return found;
                     }
                 } else {
                     if (file.getName().equals(targetFileName)) {
-                        return file; // Return the found file
+                        return file;
                     }
                 }
             }
@@ -92,7 +92,15 @@ public class FolderOperations {
         Path sourcePath = foundFile.toPath();
         Path destinationPath = new File(outputPath, foundFile.getName()).toPath();
         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-        System.out.println("File saved to: " + destinationPath);
+//        System.out.println("File saved to: " + destinationPath);
     }
-
+    public  boolean deleteFile(String filePath) {
+        File fileToDelete = new File(filePath);
+        if (fileToDelete.exists()) {
+            return fileToDelete.delete();
+        } else {
+            System.err.println("File does not exist.");
+            return false;  // File does not exist
+        }
+    }
 }
