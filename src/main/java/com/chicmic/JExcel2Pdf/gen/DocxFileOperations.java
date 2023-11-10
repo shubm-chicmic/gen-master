@@ -6,10 +6,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -74,7 +71,7 @@ public class DocxFileOperations {
         int rows = sheet.getPhysicalNumberOfRows();
         int columns = 9;
         // Create a new table with gray-colored headings
-        XWPFTable table = document.createTable(rows + 1, columns);
+        XWPFTable table = document.createTable(rows, columns);
         CTTbl ttbl = table.getCTTbl();
         CTTblPr tblPr = ttbl.getTblPr();
         CTTblBorders borders = tblPr.isSetTblBorders() ? tblPr.getTblBorders() : tblPr.addNewTblBorders();
@@ -90,10 +87,23 @@ public class DocxFileOperations {
                 XWPFTableCell cell = table.getRow(row + 1).getCell(col);
                 XWPFParagraph cellParagraph = cell.getParagraphs().get(0);
                 XWPFRun cellRun = cellParagraph.createRun();
+                cellRun.setFontFamily("Arial");
+                cellRun.setFontSize(7);
+
                 if (row == 0) {
-                    cellRun.setColor("808080"); // Gray color (use other color codes)
                     cellRun.setBold(true);
+                    cell.setColor("000000"); // Black color
+                    cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER);
+                    CTTcPr cellPr = cell.getCTTc().isSetTcPr() ? cell.getCTTc().getTcPr() : cell.getCTTc().addNewTcPr();
+                    CTShd shd = cellPr.isSetShd() ? cellPr.getShd() : cellPr.addNewShd();
+                    shd.setFill("BFBFBF"); // Grey color
+//                    cellRun.setColor("808080"); // Gray color (use other color codes)
+//                    cellRun.setBold(true);
                 }
+
+                cellParagraph.setSpacingAfter(0);
+                cellParagraph.setSpacingBefore(0);
+
                 String cellValue = sheet.getRow(row).getCell(col).toString();
                 if (row > 0 && col >= 6) {
                     double cellDoubleValue = Double.parseDouble(cellValue);
@@ -102,6 +112,7 @@ public class DocxFileOperations {
                 }
                 if (row > 0 && col == 0) cellValue = String.valueOf(row);
                 cellRun.setText(cellValue);
+
             }
         }
 
