@@ -89,6 +89,10 @@ public class FolderOperations {
         return null; // File not found
     }
     public void saveFileToOutputPath(File foundFile, String outputPath) throws IOException {
+        if(foundFile == null) {
+            System.err.println("File not found.");
+            return;
+        }
         Path sourcePath = foundFile.toPath();
         Path destinationPath = new File(outputPath, foundFile.getName()).toPath();
         Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
