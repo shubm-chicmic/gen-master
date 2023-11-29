@@ -1,7 +1,10 @@
-package com.chicmic.JExcel2Pdf.gen;
+package com.chicmic.ExcelReadAndDataTransfer;
 
 
 
+import com.chicmic.engine.MainRunner;
+import com.chicmic.Util.DocumentOperations.DocxFileOperations;
+import com.chicmic.Util.FolderOperations.FolderOperations;
 import org.apache.commons.math3.util.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,12 +19,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.chicmic.JExcel2Pdf.gen.DateOperations.findMaximumDate;
-import static com.chicmic.JExcel2Pdf.gen.DateOperations.getTodaysDate;
-import static com.chicmic.JExcel2Pdf.gen.FolderOperations.pathBefore;
+import static com.chicmic.Util.DateOperations.findMaximumDate;
+import static com.chicmic.Util.DateOperations.getTodaysDate;
+import static com.chicmic.Util.FolderOperations.FolderOperations.pathBefore;
 
 public class ExcelPerformOperations {
-    String templateDocumentName = "/" + GenApplication.documentName;
+    String templateDocumentName = "/" + MainRunner.documentName;
     Integer indexOfRecipientColumnD = 3;
     // HashMap of updating text , pair < paraindex , runIndex> for updating document with specific text at location paragaraph index and run index
     private final HashMap<Pair<Integer, Integer>, Pair<String, String>> textParaRunIndexHashMap = new HashMap<>();
@@ -43,7 +46,7 @@ public class ExcelPerformOperations {
 
     FolderOperations folderOperations = new FolderOperations();
     DocxFileOperations docxFileOperations = new DocxFileOperations();
-    String excelFilePath = GenApplication.rootDirectory;
+    String excelFilePath = MainRunner.rootDirectory;
     String prevD = "";
     String prevF = "";
     String prevB = ""; // for invoice
@@ -58,7 +61,7 @@ public class ExcelPerformOperations {
         textParaRunIndexHashMap.put(billAmountIndex, new Pair<>(String.valueOf(billAmount), "text"));
         textParaRunIndexHashMap.put(chargesAmountIndex, new Pair<>(String.valueOf(chargesAmount), "text"));
         textParaRunIndexHashMap.put(finalBillAmountIndex, new Pair<>(String.valueOf(finalBillAmount), "text"));
-        textParaRunIndexHashMap.put(FINWNumberIndex, new Pair<>(GenApplication.FINWNumber, "table1"));
+        textParaRunIndexHashMap.put(FINWNumberIndex, new Pair<>(MainRunner.FINWNumber, "table1"));
         textParaRunIndexHashMap.put(invoiceDateIndex, new Pair<>(invoiceDate, "table1"));
         textParaRunIndexHashMap.put(softexNumberIndex, new Pair<>(prevF, "table1"));
         textParaRunIndexHashMap.put(nameOfBuyerIndex, new Pair<>(prevD, "table1"));
@@ -137,7 +140,7 @@ public class ExcelPerformOperations {
                 }
                 updateDocument();
                 // Invoice pdf search and save in current working directory
-                File invoiceFile = folderOperations.searchForFile(GenApplication.invoiceDirectoriesPath, currentCellC.toString() + ".pdf");
+                File invoiceFile = folderOperations.searchForFile(MainRunner.invoiceDirectoriesPath, currentCellC.toString() + ".pdf");
                 folderOperations.saveFileToOutputPath(invoiceFile, currentWorkingDirectory);
 
                 prevD = currentD;

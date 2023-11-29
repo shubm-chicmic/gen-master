@@ -1,18 +1,26 @@
-package com.chicmic.JExcel2Pdf.gen;
+package com.chicmic.Util.DocumentOperations;
 
 
+import com.chicmic.ExcelReadAndDataTransfer.ExcelPerformOperations;
+import com.chicmic.engine.MainRunner;
+import com.spire.doc.FileFormat;
 import org.apache.commons.math3.util.Pair;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
+
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+
 
 import java.io.*;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 public class DocxFileOperations {
 
     public Class<?> getCallingClass(int level) {
@@ -26,6 +34,15 @@ public class DocxFileOperations {
             }
         }
         return null;
+    }
+    public String convertDocToDocx(String docFilePath) {
+        com.spire.doc.Document document = new com.spire.doc.Document();
+        //Load a Doc file
+        document.loadFromFile(docFilePath);
+        String destinationFilePath = docFilePath +"temp.docx";
+        //Convert the Doc file to Docx
+        document.saveToFile(destinationFilePath, FileFormat.Docx);
+        return destinationFilePath;
     }
     public void getParagraphAndRunIndices(String inputFilePath) throws IOException {
 
@@ -65,7 +82,7 @@ public class DocxFileOperations {
         List<XWPFParagraph> paragraphs = document.getParagraphs();
         XWPFParagraph targetParagraph = paragraphs.get(paragraphIndex);
 
-        FileInputStream fis = new FileInputStream(GenApplication.rootDirectory + "/" + GenApplication.FILE_NAME);
+        FileInputStream fis = new FileInputStream(MainRunner.rootDirectory + "/" + MainRunner.FILE_NAME);
         Workbook workbook = new XSSFWorkbook(fis);
         Sheet sheet = workbook.getSheetAt(0);
         int rows = sheet.getPhysicalNumberOfRows();

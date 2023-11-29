@@ -1,4 +1,6 @@
-package com.chicmic.JExcel2Pdf.gen;
+package com.chicmic.Util.FolderOperations;
+
+import com.chicmic.engine.MainRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +13,7 @@ public class FolderOperations {
         File folder = new File(path, folderName);
 
         if (folder.exists()) {
-            if(GenApplication.autoDeleteFolder) {
+            if(MainRunner.autoDeleteFolder) {
                 // Delete the folder if it already exists
                 boolean deleted = deleteFolder(folder);
                 if (!deleted) {

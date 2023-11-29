@@ -1,5 +1,9 @@
-package com.chicmic.JExcel2Pdf.gen;
+package com.chicmic.FourPointDeclarationGen;
 
+import com.chicmic.engine.MainRunner;
+import com.chicmic.Util.DateOperations;
+import com.chicmic.Util.DocumentOperations.DocxFileOperations;
+import com.chicmic.Util.FolderOperations.FolderOperations;
 import org.apache.commons.math3.util.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -26,7 +30,7 @@ public class FourPointDeclaration {
     HashMap<Pair<Integer, Integer>, Pair<String, String>> documentIndexAndTextMap = new HashMap<>();
     private final DocxFileOperations docxFileOperations = new DocxFileOperations();
     private final FolderOperations folderOperations = new FolderOperations();
-    String templateDocument = GenApplication.fourPointDeclarationDocumentPath;
+    String templateDocument = MainRunner.fourPointDeclarationDocumentPath;
 
     public void generateDocument(File excelFile) throws IOException {
 
@@ -80,7 +84,7 @@ public class FourPointDeclaration {
         documentIndexAndTextMap.put(minDateAndMaxDateIndex, new Pair<>(minDate + " till " + maxDate, "text"));
         documentIndexAndTextMap.put(tableIndex, new Pair<>("", "table_add"));
 
-        finalDocumentPath = folderOperations.createFolder("FourPointDeclaration", GenApplication.rootDirectory);
+        finalDocumentPath = folderOperations.createFolder("FourPointDeclaration", MainRunner.rootDirectory);
         finalDocumentPath += "/FourPointDeclaration.docx";
         docxFileOperations.updateTextAtPosition(templateDocument, finalDocumentPath, documentIndexAndTextMap);
         docxFileOperations.deleteTableAtIndex(finalDocumentPath, finalDocumentPath, 1);

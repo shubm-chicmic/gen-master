@@ -1,4 +1,4 @@
-package com.chicmic.JExcel2Pdf.gen;
+package com.chicmic.Util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
