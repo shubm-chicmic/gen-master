@@ -146,7 +146,9 @@ public class ExcelPerformOperations {
                 prevD = currentD;
                 prevF = currentF;
                 prevB = String.valueOf(currentB);
+                invoiceDate = findMaximumDate(prevB, invoiceDate);
                 updateDocument();
+
             }
 
         }
