@@ -3,7 +3,6 @@ package com.chicmic.Util.DocumentOperations;
 
 import com.chicmic.ExcelReadAndDataTransfer.ExcelPerformOperations;
 import com.chicmic.engine.MainRunner;
-import com.spire.doc.FileFormat;
 import org.apache.commons.math3.util.Pair;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -34,15 +33,6 @@ public class DocxFileOperations {
             }
         }
         return null;
-    }
-    public String convertDocToDocx(String docFilePath) {
-        com.spire.doc.Document document = new com.spire.doc.Document();
-        //Load a Doc file
-        document.loadFromFile(docFilePath);
-        String destinationFilePath = docFilePath +"temp.docx";
-        //Convert the Doc file to Docx
-        document.saveToFile(destinationFilePath, FileFormat.Docx);
-        return destinationFilePath;
     }
     public void getParagraphAndRunIndices(String inputFilePath) throws IOException {
 
@@ -96,7 +86,7 @@ public class DocxFileOperations {
         border.setColor("auto");
         border.setSz(BigInteger.valueOf(4));
 
-        for (int row = 0; row < rows; row++) {
+        for (int row = 0; row < rows - 1; row++) {
             if (sheet.getRow(row) == null) {
                 continue;
             }

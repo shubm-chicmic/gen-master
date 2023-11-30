@@ -31,15 +31,11 @@ public class FourPointDeclaration {
     private final DocxFileOperations docxFileOperations = new DocxFileOperations();
     private final FolderOperations folderOperations = new FolderOperations();
     String templateDocument = MainRunner.fourPointDeclarationDocumentPath;
-
     public void generateDocument(File excelFile) throws IOException {
-
 //        docxFileOperations.getParagraphAndRunIndices(templateDocument);
-
         FileInputStream fis = new FileInputStream(excelFile);
         Workbook workbook = new XSSFWorkbook(fis);
         Sheet sheet = workbook.getSheetAt(0);
-
 
         List<Row> rows = new ArrayList<>();
         for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
@@ -72,19 +68,17 @@ public class FourPointDeclaration {
 
             }
         }
-
-
         billAmountTotal = Math.round(billAmountTotal * 100.0) / 100.0;
         finalBillAmountTotal = Math.round(finalBillAmountTotal * 100.0) / 100.0;
 
         documentIndexAndTextMap.put(billAmountIndex1, new Pair<>(String.valueOf(billAmountTotal), "text"));
         documentIndexAndTextMap.put(billAmountIndex2, new Pair<>(String.valueOf(billAmountTotal), "text"));
-        documentIndexAndTextMap.put(FINWNumberIndex, new Pair<>("", "text"));
+        documentIndexAndTextMap.put(FINWNumberIndex, new Pair<>(MainRunner.FINWNumber, "text"));
         documentIndexAndTextMap.put(finalBillAmountIndex, new Pair<>("USD " + (finalBillAmountTotal), "text"));
         documentIndexAndTextMap.put(minDateAndMaxDateIndex, new Pair<>(minDate + " till " + maxDate, "text"));
         documentIndexAndTextMap.put(tableIndex, new Pair<>("", "table_add"));
 
-        finalDocumentPath = folderOperations.createFolder("FourPointDeclaration", MainRunner.rootDirectory);
+        finalDocumentPath = folderOperations.createFolder(MainRunner.FILE_NAME_WITHOUT_EXTENSION + "/FourPointDeclaration", MainRunner.rootDirectory);
         finalDocumentPath += "/FourPointDeclaration.docx";
         docxFileOperations.updateTextAtPosition(templateDocument, finalDocumentPath, documentIndexAndTextMap);
         docxFileOperations.deleteTableAtIndex(finalDocumentPath, finalDocumentPath, 1);

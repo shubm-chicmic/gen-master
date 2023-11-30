@@ -72,7 +72,7 @@ public class ExcelPerformOperations {
         textParaRunIndexHashMap.put(currentDateIndex, new Pair<>(currentDate, "text"));
         textParaRunIndexHashMap.put(new Pair<>(31, 1), new Pair<>(currentDate, "text"));
 
-        String resultantFilePath = folderOperations.createFolder("Annexure 1", excelFilePath);
+        String resultantFilePath = folderOperations.createFolder(MainRunner.FILE_NAME_WITHOUT_EXTENSION + "/Annexure 1", excelFilePath);
         if (resultantFilePath == null) {
             System.out.println("Returning");
             return;
