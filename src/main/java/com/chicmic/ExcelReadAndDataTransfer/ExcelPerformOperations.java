@@ -138,7 +138,7 @@ public class ExcelPerformOperations {
                     chargesAmount = cellValChargesAmount;
                     finalBillAmount = cellValFinalBillAmount;
                 }
-                updateDocument();
+
                 // Invoice pdf search and save in current working directory
                 File invoiceFile = folderOperations.searchForFile(MainRunner.invoiceDirectoriesPath, currentCellC.toString() + ".pdf");
                 folderOperations.saveFileToOutputPath(invoiceFile, currentWorkingDirectory);
@@ -146,6 +146,7 @@ public class ExcelPerformOperations {
                 prevD = currentD;
                 prevF = currentF;
                 prevB = String.valueOf(currentB);
+                updateDocument();
             }
 
         }

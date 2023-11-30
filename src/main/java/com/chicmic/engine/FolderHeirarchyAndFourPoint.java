@@ -23,6 +23,7 @@ public class FolderHeirarchyAndFourPoint {
             fourPointDeclaration.generateDocument(excelFile);
 
             // Delete Temp Files
+            if(MainRunner.deleteTempFiles)
             folderOperations.deleteFile(MainRunner.rootDirectory + "/sorted_" + MainRunner.FILE_NAME);
 
         } catch (IOException e) {

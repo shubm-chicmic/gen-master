@@ -11,6 +11,7 @@ import java.io.IOException;
 public class MainRunner {
 
 	public static final boolean autoDeleteFolder = true;
+	public static final boolean deleteTempFiles = true;
 	public static final String FINWNumber = "003FINW232480063"; // Inward remittance Reference Number
 	public static final String FILE_NAME = "For Bank (September).xlsx";
 	public static final String FILE_NAME_WITHOUT_EXTENSION = FolderOperations.getFileNameWithoutExtension(FILE_NAME);
