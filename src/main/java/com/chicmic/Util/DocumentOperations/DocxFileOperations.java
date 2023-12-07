@@ -86,12 +86,13 @@ public class DocxFileOperations {
         border.setColor("auto");
         border.setSz(BigInteger.valueOf(4));
 
-        for (int row = 0; row < rows - 1; row++) {
+        for (int row = 0; row < rows; row++) {
+            XWPFTableRow tableRow = table.getRow(row);
             if (sheet.getRow(row) == null) {
                 continue;
             }
             for (int col = 0; col < columns; col++) {
-                XWPFTableCell cell = table.getRow(row + 1).getCell(col);
+                XWPFTableCell cell = tableRow.getCell(col);
                 XWPFParagraph cellParagraph = cell.getParagraphs().get(0);
                 XWPFRun cellRun = cellParagraph.createRun();
                 cellRun.setFontFamily("Arial");
