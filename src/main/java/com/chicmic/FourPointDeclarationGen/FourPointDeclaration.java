@@ -53,7 +53,7 @@ public class FourPointDeclaration {
                 Cell cellB = excelRows.getCell(1); // Cell For Date
                 Cell cellG = excelRows.getCell(6); // Cell For BillAmount
                 Cell cellI = excelRows.getCell(8); // Cell For FinalBillAmount
-                if (cellB == null || cellG == null || cellI == null) {
+                if (cellB == null || cellG == null || cellI == null || cellB.toString().isEmpty() || cellG.toString().isEmpty() || cellI.toString().isEmpty()) {
                     continue;
                 }
                 minDate = DateOperations.findMinimumDate(cellB.toString(), minDate);

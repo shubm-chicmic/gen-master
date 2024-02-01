@@ -114,6 +114,9 @@ public class DocxFileOperations {
 
                 String cellValue = sheet.getRow(row).getCell(col).toString();
                 if (row > 0 && col >= 6) {
+                    if(cellValue == null || cellValue.isEmpty()){
+                        continue;
+                    }
                     double cellDoubleValue = Double.parseDouble(cellValue);
                     cellDoubleValue = Math.round(cellDoubleValue * 100.0) / 100.0;
                     cellValue = String.valueOf(cellDoubleValue);
@@ -175,7 +178,7 @@ public class DocxFileOperations {
             }
 
         }
-//        System.out.println("\u001B[35m Document Updated Path " + outputFilePath + "\u001B[0m");
+        System.out.println("\u001B[35m Document Updated Path " + outputFilePath + "\u001B[0m");
         FileOutputStream fileOutputStream = new FileOutputStream(outputFilePath);
         document.write(fileOutputStream);
         fileOutputStream.close();

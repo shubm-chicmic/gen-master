@@ -92,6 +92,7 @@ public class ExcelPerformOperations {
 //        docxFileOperations.getParagraphAndRunIndices(excelFilePath + templateDocumentName);
 
         int heirarchyIndex = 0;
+        int runIndex = 0;
         currentWorkingDirectory = resultantFilePath;
         for (Row row : rows) {
             invoiceDate = findMaximumDate(prevB, invoiceDate);
@@ -129,7 +130,9 @@ public class ExcelPerformOperations {
                         finalBillAmount = cellValFinalBillAmount;
                     }
                 } else {
-                    updateDocument();
+                    if(runIndex > 0) {
+                        updateDocument();
+                    }
                     String path = folderOperations.createFolder(currentD, resultantFilePath);
                     heirarchyIndex = 1;
                     currentWorkingDirectory = folderOperations.createFolder(String.valueOf(heirarchyIndex), path); // create folder with name = '1'
@@ -150,7 +153,7 @@ public class ExcelPerformOperations {
                 updateDocument();
 
             }
-
+            runIndex++;
         }
 
         System.out.println("\u001B[35m" + getClass().getName() + " : Operation Completed without exception !\u001B[0m" );
